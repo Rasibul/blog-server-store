@@ -78,16 +78,19 @@ async function run() {
     app.post("/api/v1/wislist", async (req, res) => {
       const wishList = req.body
       console.log(req.body)
+      wishList.wishListId = wishList._id
+      delete wishList._id
       const result = await wishlistCartCollection.insertOne(wishList)
       res.send(result)
     })
-    // pp.post('/myCart', async (req, res) => {
-    //   const product = req.body
-    //   product.productId = product._id
-    //   delete product._id
-    //   const result = await myCartCollection.insertOne(product)
-    //   res.send(result)
-    // })
+
+    app.delete('/api/v1/wishlist/:id', async (req, res) => {
+      const id = req.params.id;
+      console.log(id)
+      const query = { _id: new ObjectId(id) }
+      const result = await wishlistCartCollection.deleteOne(query)
+      res.send(result)
+    })
 
 
 
