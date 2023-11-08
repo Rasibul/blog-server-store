@@ -29,6 +29,7 @@ async function run() {
 
     const blogsCollection = client.db('blogDB').collection("blogs")
     const wishlistCartCollection = client.db('wishlistCartDB').collection("wishlist")
+    const commetnCollection = client.db('commentListCard').collection("commentlist")
 
     app.get("/api/v1/all-blogs", async (req, res) => {
       const cursor = blogsCollection.find()
@@ -38,7 +39,6 @@ async function run() {
 
     app.post("/api/v1/all-blogs", async (req, res) => {
       const blogs = req.body
-      console.log(req.body)
       const result = await blogsCollection.insertOne(blogs)
       res.send(result)
     })
@@ -77,7 +77,6 @@ async function run() {
 
     app.post("/api/v1/wislist", async (req, res) => {
       const wishList = req.body
-      console.log(req.body)
       wishList.wishListId = wishList._id
       delete wishList._id
       const result = await wishlistCartCollection.insertOne(wishList)
@@ -86,9 +85,19 @@ async function run() {
 
     app.delete('/api/v1/wishlist/:id', async (req, res) => {
       const id = req.params.id;
-      console.log(id)
       const query = { _id: new ObjectId(id) }
       const result = await wishlistCartCollection.deleteOne(query)
+      res.send(result)
+    })
+
+    app.post("/api/v1/comment-list", async (req, res) => {
+      const comments = req.body
+      const result = await commetnCollection.insertOne(comments)
+      res.send(result)
+    })
+
+    app.get('/api/v1/comment-list', async (req, res) => {
+      const result = await commetnCollection.find().toArray()
       res.send(result)
     })
 
